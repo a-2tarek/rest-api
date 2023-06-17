@@ -12,33 +12,30 @@ app.listen(process.env.PORT , () =>
 console.log(`app running om port: ${process.env.PORT}`))
 
 app.get( '/Users',(req, res) =>{
-   user.find({}).exec((err, data) => {
-    if(err){
-        res.send('error')
-    }else{
-        res.json('data')
+   user.find({}).exec(async function(error, data) {
+   try {
+    res.json('data')
         console.log(data)
-    }
+   } catch(error) {
+     res.send('error')
+   }
    })
 })
 
 app.post('/Users', (req,res)=> {
-    user.insertOne({
-        name: 'omar',
-        age: 21
-    },(err,data) => {
-        if(err){
-            res.send('error')
-        }else{
-            res.status(200)
-            
+
+    user.insertOne(req.body, async function (err, data){
+        try {
+            user.insertOne({data})
+        } catch (err) {
+            console.log(err)
         }
-    })
+    } )
 })
 
-app.put('/Users', (req,res) => {
+app.put('/users/:userID', (req,res) => {
     user.findOneAndUpdate({
-        id: req.params.id
+        id: req.params.userID
     }, (err, data) => {
         if(err){
             res.send('error')
